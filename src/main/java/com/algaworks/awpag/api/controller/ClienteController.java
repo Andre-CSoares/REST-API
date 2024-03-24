@@ -6,9 +6,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,19 +16,52 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping("/clientes")
 public class ClienteController {
 
     private final ClienteRepository clienteRepository;
 
-    @GetMapping("/clientes")
+    @GetMapping
     public List<Cliente> listar(){
-        return clienteRepository.findByNomeContaining("Joao");
+        return clienteRepository.findAll();
     }
 
-    @GetMapping("/clientes/{clientId}")
-    public Cliente buscar(@PathVariable Long clientId){
+    @GetMapping("/{clientId}")
+    public ResponseEntity<Cliente> buscar(@PathVariable Long clientId){
         Optional<Cliente> cliente = clienteRepository.findById(clientId);
 
-        return cliente.orElse(null);
+        if(cliente.isPresent()){
+            return ResponseEntity.ok(cliente.get());
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public Cliente adicionar(@RequestBody Cliente cliente){
+        return clienteRepository.save(cliente);
+    }
+
+    @PutMapping("/{clienteId}")
+    public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteId, @RequestBody Cliente cliente){
+        if (!clienteRepository.existsById(clienteId)){
+            return ResponseEntity.notFound().build();
+        }
+
+        cliente.setId(clienteId);
+        cliente = clienteRepository.save(cliente);
+
+        return ResponseEntity.ok(cliente);
+    }
+
+    @DeleteMapping("/{clienteId}")
+    public ResponseEntity<Void> excluir(@PathVariable Long clienteId){
+        if (!clienteRepository.existsById(clienteId)){
+            return ResponseEntity.notFound().build();
+        }
+
+        clienteRepository.deleteById(clienteId);
+        return ResponseEntity.noContent().build();
     }
 }
