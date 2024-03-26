@@ -26,8 +26,8 @@ public class FuncionarioController {
     }
 
     @GetMapping("/{funcionarioId}")
-    public ResponseEntity<Funcionario> buscar(@PathVariable Long clientId){
-        Optional<Funcionario> Funcionario = funcionarioRepository.findById(clientId);
+    public ResponseEntity<Funcionario> buscar(@PathVariable Long funcionarioId){
+        Optional<Funcionario> Funcionario = funcionarioRepository.findById(funcionarioId);
 
         if(Funcionario.isPresent()){
             return ResponseEntity.ok(Funcionario.get());
