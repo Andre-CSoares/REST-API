@@ -31,6 +31,11 @@ public class User {
     private String email;
 
     @NotBlank
+    @Size(max = 50)
+    @Email
+    private String senha;
+
+    @NotBlank
     @Size(max = 20)
     private String telefone;
 
