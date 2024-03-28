@@ -3,6 +3,7 @@ create table funcionario(
     nome varchar(255) not null,
     email varchar(255) not null,
     telefone varchar(20) not null,
+    setor varchar(30) not null,
 
     primary key (id)
 );

@@ -4,7 +4,7 @@ create table user(
     email varchar(255) not null,
     telefone varchar(20) not null,
     tipo_user varchar(50) not null,
-    password varchar(50) not null,
+    senha varchar(50) not null,
 
     primary key (id)
 );

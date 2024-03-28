@@ -25,28 +25,12 @@ public class UserController {
         return UserRepository.findAll();
     }
 
-    @GetMapping("/search/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<User> buscar(@PathVariable Long userId){
         Optional<User> User = UserRepository.findById(userId);
 
         if(User.isPresent()){
             return ResponseEntity.ok(User.get());
-        }
-
-        return ResponseEntity.notFound().build();
-    }
-
-    @GetMapping("/login/{userId}")
-    public ResponseEntity<User> login(@PathVariable Long userId, @RequestParam String nome, @RequestParam String senha){
-        Optional<User> User = UserRepository.findById(userId);
-
-        if(User.isPresent()){
-            User user = User.get();
-            if(user.getNome().equals(nome) && user.getSenha().equals(senha)){
-                return ResponseEntity.ok(user);
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
         }
 
         return ResponseEntity.notFound().build();
@@ -70,6 +54,22 @@ public class UserController {
         return ResponseEntity.ok(User);
     }
 
+    @GetMapping("/login/{userId}")
+    public ResponseEntity<User> login(@PathVariable Long userId, @RequestParam String nome, @RequestParam String senha){
+        Optional<User> User = UserRepository.findById(userId);
+
+        if(User.isPresent()){
+            User user = User.get();
+            if(user.getNome().equals(nome) && user.getSenha().equals(senha)){
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> excluir(@PathVariable Long userId){
         if (!UserRepository.existsById(userId)){
@@ -78,10 +78,5 @@ public class UserController {
 
         cadastroUserService.excluir(userId);
         return ResponseEntity.noContent().build();
-    }
-
-    @ExceptionHandler(NegocioException.class)
-    public ResponseEntity<String> capturar(NegocioException e){
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }
