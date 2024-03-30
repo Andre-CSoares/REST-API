@@ -36,12 +36,6 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public User adicionar(@Valid @RequestBody User User){
-        return cadastroUserService.salvar(User);
-    }
-
     @PutMapping("/{userId}")
     public ResponseEntity<User> atualizar(@PathVariable Long userId, @Valid @RequestBody User User){
         if (!UserRepository.existsById(userId)){
@@ -54,21 +48,7 @@ public class UserController {
         return ResponseEntity.ok(User);
     }
 
-    @GetMapping("/login/{userId}")
-    public ResponseEntity<User> login(@PathVariable Long userId, @RequestParam String nome, @RequestParam String senha){
-        Optional<User> User = UserRepository.findById(userId);
 
-        if(User.isPresent()){
-            User user = User.get();
-            if(user.getNome().equals(nome) && user.getSenha().equals(senha)){
-                return ResponseEntity.ok(user);
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
-        }
-
-        return ResponseEntity.notFound().build();
-    }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> excluir(@PathVariable Long userId){

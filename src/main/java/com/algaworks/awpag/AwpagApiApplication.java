@@ -10,4 +10,5 @@ public class AwpagApiApplication {
 		SpringApplication.run(AwpagApiApplication.class, args);
 	}
 
+
 }
