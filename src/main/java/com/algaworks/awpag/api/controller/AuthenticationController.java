@@ -1,6 +1,8 @@
 package com.algaworks.awpag.api.controller;
 
+import com.algaworks.awpag.domain.infra.security.TokenService;
 import com.algaworks.awpag.domain.model.AuthenticationDTO;
+import com.algaworks.awpag.domain.model.LoginResponseDTO;
 import com.algaworks.awpag.domain.model.RegisterDTO;
 import com.algaworks.awpag.domain.model.User;
 import com.algaworks.awpag.domain.repository.UserRepository;
@@ -26,12 +28,17 @@ public class AuthenticationController {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")
