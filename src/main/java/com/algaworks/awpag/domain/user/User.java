@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -19,4 +21,11 @@ public class User {
     private String name;
     private String email;
     private String password;
+
+    @PrePersist
+    public void prePersist() {
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
+    }
 }
